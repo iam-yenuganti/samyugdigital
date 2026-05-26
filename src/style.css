@@ -78,11 +78,25 @@ html {
 body {
   font-family: var(--font-body);
   background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(155, 81, 224, 0.08) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, rgba(0, 242, 254, 0.08) 0, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 45px 45px, 45px 45px;
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body.light-theme {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.04) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, rgba(2, 132, 199, 0.04) 0, transparent 50%),
+    linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
 }
 
 h1, h2, h3, h4 {
@@ -165,8 +179,8 @@ body.light-theme .badge {
 /* Base Glassmorphism Panel */
 .glass-panel {
   background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   box-shadow: var(--shadow-card);
@@ -174,11 +188,12 @@ body.light-theme .badge {
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(0, 242, 254, 0.25);
   box-shadow: var(--shadow-premium);
+  transform: translateY(-4px);
 }
 body.light-theme .glass-panel:hover {
-  border-color: rgba(15, 23, 42, 0.12);
+  border-color: rgba(124, 58, 237, 0.2);
 }
 
 .gradient-border {
@@ -283,8 +298,8 @@ body.light-theme .glow-orb {
   border: 1px solid transparent;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 28px rgba(0, 242, 254, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 242, 254, 0.35), 0 0 50px rgba(155, 81, 224, 0.2);
 }
 body.light-theme .btn-primary {
   color: #ffffff !important;
@@ -296,12 +311,15 @@ body.light-theme .btn-primary {
   border: 1px solid var(--border-color);
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--text-primary);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--accent-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 242, 254, 0.12);
 }
 body.light-theme .btn-secondary:hover {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.02);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.08);
 }
 
 /* Header & Navbar styling */
@@ -1369,9 +1387,10 @@ body.light-theme .roi-summary-box {
 
 .roi-percentage-circle {
   position: relative;
-  width: 90px;
-  height: 90px;
+  width: 95px;
+  height: 95px;
   flex-shrink: 0;
+  filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.35));
 }
 
 .circle-progress {
