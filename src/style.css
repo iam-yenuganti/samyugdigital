@@ -354,10 +354,20 @@ body.light-theme .btn-secondary:hover {
 }
 
 .logo-icon {
-  width: 32px;
-  height: 32px;
-  color: var(--accent-primary);
+  width: 36px;
+  height: 36px;
   animation: logoPulse 4s infinite alternate;
+  filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.2));
+}
+
+.logo-icon circle {
+  transform-origin: center;
+  animation: nodeGlow 2s infinite alternate ease-in-out;
+}
+
+@keyframes nodeGlow {
+  from { transform: scale(0.9); opacity: 0.8; }
+  to { transform: scale(1.1); opacity: 1; }
 }
 
 .logo-text {
