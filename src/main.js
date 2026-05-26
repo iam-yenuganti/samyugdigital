@@ -1,4 +1,4 @@
-// Samyug Digital Website Logic
+// Samyug Digital Website Logic - Indian Localized Version
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- Core Theme Switcher ---
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- ROI Calculator Engine ---
+  // --- ROI Calculator Engine (Indian Rupees ₹) ---
   const rangeTraffic = document.getElementById('range-traffic');
   const rangeConversion = document.getElementById('range-conversion');
   const rangeValue = document.getElementById('range-value');
@@ -72,12 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const circleStrokeFill = document.getElementById('circle-stroke-fill');
 
   let activeCalculatorMetrics = {
-    traffic: 1500,
-    conversion: 2.5,
-    value: 500,
-    budget: 1500,
-    leads: 38
+    traffic: 2000,
+    conversion: 3.0,
+    value: 2500,
+    budget: 10000,
+    leads: 60
   };
+
+  // Format Helper for Indian Rupees (₹)
+  function formatRupees(number, includeDecimals = false) {
+    const formatted = Math.round(number).toLocaleString('en-IN');
+    return '₹' + formatted;
+  }
 
   function updateCalculator() {
     const traffic = parseInt(rangeTraffic.value);
@@ -86,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const budget = parseInt(rangeBudget.value);
 
     // Update Slider text labels
-    valTraffic.textContent = traffic.toLocaleString();
+    valTraffic.textContent = traffic.toLocaleString('en-IN');
     valConversion.textContent = conversion.toFixed(1) + '%';
-    valValue.textContent = '$' + value.toLocaleString();
-    valBudget.textContent = '$' + budget.toLocaleString();
+    valValue.textContent = formatRupees(value);
+    valBudget.textContent = formatRupees(budget);
 
     // Calculations
     const leads = Math.round(traffic * (conversion / 100));
@@ -110,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Update display values
-    outLeads.textContent = leads.toLocaleString();
-    outRevenue.textContent = '$' + revenue.toLocaleString();
-    outNetProfit.textContent = '$' + netProfit.toLocaleString();
-    outCpl.textContent = cpl > 0 ? '$' + cpl.toFixed(2) : '$0.00';
-    outRoiPercent.textContent = roiPercentage.toLocaleString() + '%';
+    outLeads.textContent = leads.toLocaleString('en-IN');
+    outRevenue.textContent = formatRupees(revenue);
+    outNetProfit.textContent = formatRupees(netProfit);
+    outCpl.textContent = cpl > 0 ? '₹' + cpl.toFixed(2) : '₹0.00';
+    outRoiPercent.textContent = roiPercentage.toLocaleString('en-IN') + '%';
 
     // Update Circular Progress
     // SVG circle circumference is ~264 (2 * PI * r = 2 * 3.14159 * 42 = 263.89)
@@ -143,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   calcCtaBtn.addEventListener('click', () => {
     isCalculatorAttached = true;
-    attachBudget.textContent = activeCalculatorMetrics.budget.toLocaleString();
-    attachLeads.textContent = activeCalculatorMetrics.leads.toLocaleString();
+    attachBudget.textContent = activeCalculatorMetrics.budget.toLocaleString('en-IN');
+    attachLeads.textContent = activeCalculatorMetrics.leads.toLocaleString('en-IN');
     autofillIndicator.style.display = 'flex';
     
     // Smooth scroll to contact form
@@ -180,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
       crmLeadsList.innerHTML = `
         <div class="crm-empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <span>No inquiries submitted yet. Fill out the contact form or click ROI strategy buttons to generate a lead!</span>
+          <span>No enquiries yet. Fill out the contact form or use the Income Estimator to create a live lead!</span>
         </div>
       `;
       return;
@@ -200,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lead.calculatorData) {
         metaHtml = `
           <div class="crm-lead-meta">
-            <span>Budget: $${lead.calculatorData.budget.toLocaleString()}/mo</span>
-            <span>Est. Leads: ${lead.calculatorData.leads}</span>
+            <span>Budget: ₹${lead.calculatorData.budget.toLocaleString('en-IN')}/mo</span>
+            <span>Est. Enquiries: ${lead.calculatorData.leads}</span>
           </div>
         `;
       }
@@ -221,41 +227,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Seed sample leads
+  // Seed Indian sample leads
   const sampleLeads = [
     {
       id: 'sample-1',
-      name: 'Sarah Connor',
-      email: 'sarah@sunsetbakery.com',
-      business: 'Sunset Artisan Bakery',
-      serviceName: 'Website & Web Apps Building',
-      message: 'Looking for a beautiful online ordering site to showcase our daily specials. Need SEO optimization to compete with local cafes.',
+      name: 'Rohan Sharma',
+      email: 'rohan@sharmasweets.in',
+      business: 'Sharma Sweets & Caterers',
+      serviceName: 'Fast Mobile Website',
+      message: 'We want a simple website to show our catering menu and let customers book orders directly via WhatsApp.',
       timestamp: Date.now() - 120000,
       calculatorData: {
-        budget: 1500,
-        leads: 38
+        budget: 10000,
+        leads: 60
       }
     },
     {
       id: 'sample-2',
-      name: 'Dr. Michael Chen',
-      email: 'm.chen@elitedental.com',
-      business: 'Elite Dental Spa',
-      serviceName: 'Paid Promotions & Ads',
-      message: 'Need local lead generation for new dental patients. Specifically wanting to push implant promotions.',
+      name: 'Dr. Ananya Karan',
+      email: 'dr.ananya@karanclinic.com',
+      business: 'Karan Dental Clinic',
+      serviceName: 'Local neighborhood ads',
+      message: 'Need local Facebook ads to get patient bookings in Indiranagar, Bangalore. Focus on dental implant packages.',
       timestamp: Date.now() - 3600000,
       calculatorData: {
-        budget: 3500,
-        leads: 70
+        budget: 25000,
+        leads: 120
       }
     },
     {
       id: 'sample-3',
-      name: 'Arthur Pendelton',
-      email: 'contact@pendeltonlaw.com',
-      business: 'Pendelton Family Law',
-      serviceName: 'Full Digital Growth Engine',
-      message: 'Need high-converting landing pages for custody dispute leads, backed by Google Ads and expert copywriting.',
+      name: 'Amit Verma',
+      email: 'info@vermabuilders.in',
+      business: 'Verma Builders & Interiors',
+      serviceName: 'Full Online Setup',
+      message: 'Need local inquiries for luxury modular kitchen renovations. Want Google Maps setup and Google ads.',
       timestamp: Date.now() - 7200000,
       calculatorData: null
     }
@@ -300,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show Success Modal
     successUserName.textContent = nameVal;
-    successBusinessName.textContent = businessVal;
+    successBusinessName.textContent = businessVal.split(' ')[0]; // short name
     successUserEmail.textContent = emailVal;
     successOverlay.classList.add('open');
 
