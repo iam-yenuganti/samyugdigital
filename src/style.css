@@ -2126,3 +2126,31 @@ body.light-theme .site-footer {
   }
 }
 
+/* Logo Tagline Styles */
+.logo-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px !important;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-tagline {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  padding-left: 42px; /* aligns with logo-text after icon */
+  line-height: 1;
+}
+
+body.light-theme .logo-tagline {
+  color: var(--text-muted);
+}
