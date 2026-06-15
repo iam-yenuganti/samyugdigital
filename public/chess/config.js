@@ -1,16 +1,13 @@
 /* ----------------------------------------------------------------------------
  * Samyug Digital — Chess Portal configuration
  *
- * 1) googleClientId: your OAuth 2.0 Client ID from Google Cloud Console.
- *    (This value is NOT a secret — it is safe to commit and ship to the browser.)
- *    Setup steps are in README.md.
+ * accessCode: the code users must enter to open the portal.
+ *   You can also open directly via the URL hash, e.g.  /chess/#chess1728
  *
- * 2) allowedEmails: only these Google accounts may enter the portal.
- *    Add more addresses as needed.
+ * NOTE: This is a CLIENT-SIDE gate on a static site. It keeps casual visitors
+ * out, but the code ships in the browser, so treat it as a soft lock — not a
+ * hard security boundary. For real enforcement, use Cloudflare Access (README).
  * -------------------------------------------------------------------------- */
 window.CHESS_PORTAL_CONFIG = {
-  googleClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-  allowedEmails: [
-    "srimathi.yenuganti@gmail.com",
-  ],
+  accessCode: "chess1728",
 };

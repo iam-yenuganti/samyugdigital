@@ -7,29 +7,34 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Access gate: shown until a user signs in with an allowed Google account -->
+  <!-- Access gate: shown until the correct access code is entered -->
   <div id="authGate" class="auth-gate">
     <div class="auth-card">
       <div class="auth-logo">♟</div>
       <h1>Samyug Digital — Chess Portal</h1>
-      <p class="auth-sub">Sign in with an authorized Google account to play.</p>
+      <p class="auth-sub">Enter your access code to play.</p>
 
-      <div id="gBtn" class="g-btn"></div>
-
-      <button id="devEnter" class="btn auth-dev hidden" type="button">
-        Developer preview (localhost only)
-      </button>
+      <form id="codeForm" class="code-form" autocomplete="off">
+        <input
+          id="codeInput"
+          class="code-input"
+          type="password"
+          inputmode="text"
+          placeholder="Access code"
+          aria-label="Access code"
+        />
+        <button type="submit" class="btn primary">Enter</button>
+      </form>
 
       <p id="authMsg" class="auth-msg"></p>
-      <p class="auth-foot">Access is restricted to approved accounts.</p>
+      <p class="auth-foot">Access is restricted to approved users.</p>
     </div>
   </div>
 
   <div class="app hidden" id="appRoot">
     <header class="header">
       <div class="user-bar" id="userBar">
-        <span class="user-email" id="userEmail"></span>
-        <button id="signOut" class="btn btn-small" type="button">Sign out</button>
+        <button id="signOut" class="btn btn-small" type="button">Lock</button>
       </div>
       <h1>♟ Chess vs Bot</h1>
       <p class="subtitle">Play White against a built-in AI</p>
@@ -112,7 +117,6 @@
     </div>
   </div>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="chess.js"></script>
