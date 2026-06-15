@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chess vs Bot</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Access gate: shown until a user signs in with an allowed Google account -->
+  <div id="authGate" class="auth-gate">
+    <div class="auth-card">
+      <div class="auth-logo">♟</div>
+      <h1>Samyug Digital — Chess Portal</h1>
+      <p class="auth-sub">Sign in with an authorized Google account to play.</p>
+
+      <div id="gBtn" class="g-btn"></div>
+
+      <button id="devEnter" class="btn auth-dev hidden" type="button">
+        Developer preview (localhost only)
+      </button>
+
+      <p id="authMsg" class="auth-msg"></p>
+      <p class="auth-foot">Access is restricted to approved accounts.</p>
+    </div>
+  </div>
+
+  <div class="app hidden" id="appRoot">
+    <header class="header">
+      <div class="user-bar" id="userBar">
+        <span class="user-email" id="userEmail"></span>
+        <button id="signOut" class="btn btn-small" type="button">Sign out</button>
+      </div>
+      <h1>♟ Chess vs Bot</h1>
+      <p class="subtitle">Play White against a built-in AI</p>
+    </header>
+
+    <div class="layout">
+      <div class="board-wrap">
+        <div id="board" class="board" aria-label="Chess board"></div>
+      </div>
+
+      <aside class="panel">
+        <div class="dashboard">
+          <h2 class="panel-title">Dashboard</h2>
+          <div class="score-grid">
+            <div class="score-card win">
+              <span class="score-num" id="scoreWins">0</span>
+              <span class="score-label">Wins</span>
+            </div>
+            <div class="score-card draw">
+              <span class="score-num" id="scoreDraws">0</span>
+              <span class="score-label">Draws</span>
+            </div>
+            <div class="score-card loss">
+              <span class="score-num" id="scoreLosses">0</span>
+              <span class="score-label">Losses</span>
+            </div>
+          </div>
+          <div class="points-row">
+            <span>Points</span>
+            <strong id="points">0</strong>
+          </div>
+          <div class="rating-row">
+            <span>Your rating</span>
+            <strong id="rating">800</strong>
+          </div>
+        </div>
+
+        <div class="bot-pick">
+          <h2 class="panel-title">Choose your bot</h2>
+          <div id="botList" class="bot-list"></div>
+        </div>
+
+        <div class="controls">
+          <label class="field">
+            <span>Play as</span>
+            <select id="side">
+              <option value="w" selected>White</option>
+              <option value="b">Black</option>
+            </select>
+          </label>
+
+          <button id="newGame" class="btn primary">New Game</button>
+          <button id="undo" class="btn">Undo</button>
+        </div>
+
+        <div class="status">
+          <div class="turn">
+            Turn: <strong id="turnLabel">White</strong>
+          </div>
+          <div id="message" class="message"></div>
+        </div>
+
+        <div class="history-wrap">
+          <h2 class="panel-title">Moves</h2>
+          <ol id="history" class="history"></ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="promotion" class="modal hidden">
+    <div class="modal-card">
+      <h3>Promote to</h3>
+      <div class="promo-options">
+        <button data-piece="q" class="promo-btn">♛ Queen</button>
+        <button data-piece="r" class="promo-btn">♜ Rook</button>
+        <button data-piece="b" class="promo-btn">♝ Bishop</button>
+        <button data-piece="n" class="promo-btn">♞ Knight</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="chess.js"></script>
+  <script src="bot.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
