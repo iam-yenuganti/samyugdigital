@@ -37,8 +37,19 @@
 .auth-logo { font-size: 56px; line-height: 1; }
 .auth-card h1 { font-size: 20px; margin: 12px 0 6px; }
 .auth-sub { color: #b9b9b9; font-size: 14px; margin: 0 0 22px; }
-.g-btn { display: flex; justify-content: center; min-height: 44px; }
-.auth-dev { margin-top: 14px; width: 100%; }
+.code-form { display: flex; flex-direction: column; gap: 10px; }
+.code-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #2f2f2f;
+  color: var(--text);
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+.code-input:focus { outline: none; border-color: var(--accent); }
 .auth-msg { margin: 16px 0 0; min-height: 18px; font-size: 13px; color: #b9b9b9; }
 .auth-msg.error { color: #ef8c7f; font-weight: 600; }
 .auth-foot { margin: 20px 0 0; font-size: 12px; color: #888; }

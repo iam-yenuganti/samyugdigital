@@ -1,103 +1,83 @@
 # Samyug Digital — Chess Portal
 
 A standalone chess game (play vs. named AI bots, with an auto-scoring dashboard)
-gated behind **Google Sign-In**, restricted to approved Gmail accounts. Built as
-a separate portal for **samyugdigital.com**.
+gated behind a simple **access code**. Built as a separate portal for
+**samyugdigital.com**.
 
 ## Features
 - Full chess rules engine (castling, en passant, promotion, check/mate/stalemate, draws)
 - Named bots with ratings & personalities (Martin → Maria)
 - Auto dashboard: wins / draws / losses, points, and a self-updating Elo rating
-- Google account access gate with an email allowlist
+- Access-code gate (unlock with a shared code)
 
 ## Files
 | File | Purpose |
 |------|---------|
-| `index.html` | Page + login gate markup |
+| `index.html` | Page + access-gate markup |
 | `styles.css` | Styling |
-| `auth.js` | Google sign-in gate + allowlist check |
-| `config.js` | **Your** Client ID + allowed emails |
+| `auth.js` | Access-code gate |
+| `config.js` | **Your** access code |
 | `chess.js` | Chess rules engine |
 | `bot.js` | Minimax + alpha-beta AI |
 | `main.js` | Board UI, bots, dashboard |
 
 ---
 
-## 1. Configure access
+## 1. Set the access code
 
 Edit [`config.js`](config.js):
 
 ```js
 window.CHESS_PORTAL_CONFIG = {
-  googleClientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-  allowedEmails: ["srimathi.yenuganti@gmail.com"], // add more as needed
+  accessCode: "chess1728",
 };
 ```
 
-The Google Client ID is **not a secret** — it is meant to ship to the browser.
+Users open the portal and type the code, **or** open it directly with the code
+in the URL hash:
 
-## 2. Create a Google OAuth Client ID
+```
+https://samyugdigital.com/chess/#chess1728
+```
 
-1. Go to <https://console.cloud.google.com/> → create/select a project.
-2. **APIs & Services → OAuth consent screen** → External → fill app name + your
-   email → add yourself as a **Test user** (or Publish the app).
-3. **APIs & Services → Credentials → Create Credentials → OAuth client ID**.
-4. Application type: **Web application**.
-5. **Authorized JavaScript origins** — add the origins you will use:
-   - `http://localhost:8000` (local testing)
-   - `https://<your-username>.github.io` (if using GitHub Pages)
-   - `https://samyugdigital.com` and `https://www.samyugdigital.com`
-6. Copy the generated Client ID into `config.js`.
-
-## 3. Run locally
-
-Google sign-in needs a real origin (not `file://`). Serve the folder:
+## 2. Run locally
 
 ```bash
 python3 -m http.server 8000
-# open http://localhost:8000
+# open http://localhost:8000  and enter the code
 ```
-
-On localhost a **“Developer preview”** button lets you enter without Google so
-you can test the game. It only appears on localhost — the live site stays gated.
 
 ---
 
-## 4. Put it on GitHub (separate repo)
+## 3. Put it on GitHub
 
-This folder is already a local git repo with an initial commit. Create an empty
-repo on GitHub (e.g. `chess-portal`), then:
+This portal lives in the website repo `iam-yenuganti/samyugdigital` under
+`public/chess/`, and is served at `https://samyugdigital.com/chess/`.
+Pushing to `main` triggers the site's GitHub Pages deploy automatically.
 
-```bash
-git remote add origin https://github.com/iam-yenuganti/chess-portal.git
-git branch -M main
-git push -u origin main
-```
+## 4. Host it
 
-## 5. Host it
+### On samyugdigital.com (current setup)
+The files sit in `public/chess/` of the Vite site, so they deploy to
+`https://samyugdigital.com/chess/`. No extra origin configuration is needed.
 
-### Option A — GitHub Pages (free, static)
-Repo **Settings → Pages → Build from branch → `main` / root**. Your site appears
-at `https://iam-yenuganti.github.io/chess-portal/`. Add that origin in step 2.5.
-
-### Option B — As a portal on samyugdigital.com
-Copy these files into your website under a `chess/` path (or point a
-`chess.samyugdigital.com` subdomain at this repo) so it loads at
-`https://samyugdigital.com/chess/`. Add that origin in step 2.5.
+### Or GitHub Pages (standalone)
+Repo **Settings → Pages → Build from branch → `main` / root** serves a standalone
+copy at `https://iam-yenuganti.github.io/<repo>/`.
 
 ---
 
 ## Security note (important)
 
-The Gmail allowlist runs **in the browser**. It is a solid deterrent for a
-personal portal, but a determined technical user could bypass client-side
-JavaScript. For a **hard** access boundary with zero backend code, put the site
-behind **Cloudflare Access**:
+The access code runs **in the browser**. It keeps casual visitors out, but the
+code ships in the page source, so a determined technical user could read it.
+Treat it as a **soft lock**. For a **hard** access boundary with zero backend
+code, put the site behind **Cloudflare Access**:
 
 1. Put the domain on Cloudflare.
 2. **Zero Trust → Access → Applications → Add a self-hosted app** for
    `samyugdigital.com/chess`.
 3. Add a policy: *Allow* → emails → `srimathi.yenuganti@gmail.com`.
 
-Cloudflare then enforces Google login **before** the files are ever served, so
-the allowlist cannot be bypassed. You can keep this in-app gate as well.
+Cloudflare then enforces login **before** the files are ever served, so access
+cannot be bypassed. You can keep this in-app code gate as well.
