@@ -7,42 +7,31 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Access gate: shown until the correct access code is entered -->
-  <div id="authGate" class="auth-gate">
-    <div class="auth-card">
-      <div class="auth-logo">♟</div>
-      <h1>Samyug Digital — Chess Portal</h1>
-      <p class="auth-sub">Enter your access code to play.</p>
-
-      <form id="codeForm" class="code-form" autocomplete="off">
-        <input
-          id="codeInput"
-          class="code-input"
-          type="password"
-          inputmode="text"
-          placeholder="Access code"
-          aria-label="Access code"
-        />
-        <button type="submit" class="btn primary">Enter</button>
-      </form>
-
-      <p id="authMsg" class="auth-msg"></p>
-      <p class="auth-foot">Access is restricted to approved users.</p>
-    </div>
-  </div>
-
-  <div class="app hidden" id="appRoot">
+  <div class="app" id="appRoot">
     <header class="header">
-      <div class="user-bar" id="userBar">
-        <button id="signOut" class="btn btn-small" type="button">Lock</button>
-      </div>
       <h1>♟ Chess vs Bot</h1>
       <p class="subtitle">Play White against a built-in AI</p>
     </header>
 
     <div class="layout">
-      <div class="board-wrap">
-        <div id="board" class="board" aria-label="Chess board"></div>
+      <div class="board-col">
+        <div class="matchup" id="matchup">
+          <span class="player-tag top" id="tagTop"></span>
+          <span class="vs">vs</span>
+          <span class="player-tag bottom" id="tagBottom"></span>
+        </div>
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="Chess board"></div>
+          <div id="banner" class="banner hidden"></div>
+          <div id="gameOver" class="game-over hidden">
+            <div class="game-over-card">
+              <div class="game-over-icon" id="goIcon">♔</div>
+              <h3 id="goTitle">Checkmate</h3>
+              <p id="goText"></p>
+              <button id="goNew" class="btn primary" type="button">New Game</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <aside class="panel">
@@ -78,6 +67,12 @@
         </div>
 
         <div class="controls">
+          <label class="field">
+            <span>Your name</span>
+            <input id="playerName" class="text-input" type="text" maxlength="20"
+              placeholder="Enter your name" autocomplete="off" />
+          </label>
+
           <label class="field">
             <span>Play as</span>
             <select id="side">
@@ -117,8 +112,18 @@
     </div>
   </div>
 
-  <script src="config.js"></script>
-  <script src="auth.js"></script>
+  <div id="nameModal" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="nameModalTitle">Enter your name</h3>
+      <p class="modal-sub" id="nameModalSub"></p>
+      <form id="nameForm" class="name-form" autocomplete="off">
+        <input id="nameModalInput" class="text-input" type="text" maxlength="20"
+          placeholder="Your name" />
+        <button type="submit" class="btn primary">Start game</button>
+      </form>
+    </div>
+  </div>
+
   <script src="chess.js"></script>
   <script src="bot.js"></script>
   <script src="main.js"></script>
