@@ -1,50 +1,50 @@
 # Samyug Digital — Chess Portal
 
-A standalone chess game (play vs. named AI bots, with an auto-scoring dashboard)
-gated behind a simple **access code**. Built as a separate portal for
-**samyugdigital.com**.
+A standalone chess game (play vs. named AI bots, with an auto-scoring dashboard),
+secured behind a **server-side PIN gate** (Cloudflare Worker). Built as a separate
+portal for **samyugdigital.com**.
 
 ## Features
 - Full chess rules engine (castling, en passant, promotion, check/mate/stalemate, draws)
 - Named bots with ratings & personalities (Martin → Maria)
 - Auto dashboard: wins / draws / losses, points, and a self-updating Elo rating
-- Access-code gate (unlock with a shared code)
+- **Secure PIN gate** enforced at Cloudflare's edge (cannot be bypassed)
 
 ## Files
 | File | Purpose |
 |------|---------|
-| `index.html` | Page + access-gate markup |
+| `index.html` | Game page |
 | `styles.css` | Styling |
-| `auth.js` | Access-code gate |
-| `config.js` | **Your** access code |
 | `chess.js` | Chess rules engine |
 | `bot.js` | Minimax + alpha-beta AI |
 | `main.js` | Board UI, bots, dashboard |
+| `chess-gate/` | Cloudflare Worker that PIN-protects `/chess` |
 
 ---
 
-## 1. Set the access code
+## Security model
 
-Edit [`config.js`](config.js):
+The game files are static and live on GitHub Pages, but access to
+`https://samyugdigital.com/chess` is enforced by a **Cloudflare Worker** that
+runs *before* any file is served:
 
-```js
-window.CHESS_PORTAL_CONFIG = {
-  accessCode: "chess1728",
-};
-```
+- The Worker shows a PIN prompt and checks the PIN against a secret stored on
+  Cloudflare (`CHESS_PIN`). The PIN is **never** sent to the browser.
+- On success it issues a signed, HttpOnly session cookie and proxies the game.
+- No valid cookie → the files are never served.
 
-Users open the portal and type the code, **or** open it directly with the code
-in the URL hash:
+This is a true security boundary — disabling JavaScript or reading page source
+does not reveal the PIN or grant access.
 
-```
-https://samyugdigital.com/chess/#chess1728
-```
+**Setup & deploy:** see [`chess-gate/README.md`](chess-gate/README.md).
 
-## 2. Run locally
+## Run locally (no gate)
+
+The gate only applies on the live domain. Locally just serve the folder:
 
 ```bash
 python3 -m http.server 8000
-# open http://localhost:8000  and enter the code
+# open http://localhost:8000
 ```
 
 ---

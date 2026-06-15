@@ -30,6 +30,21 @@
   const undoBtn = document.getElementById("undo");
   const promotionModal = document.getElementById("promotion");
 
+  const bannerEl = document.getElementById("banner");
+  const gameOverEl = document.getElementById("gameOver");
+  const goIconEl = document.getElementById("goIcon");
+  const goTitleEl = document.getElementById("goTitle");
+  const goTextEl = document.getElementById("goText");
+  const goNewBtn = document.getElementById("goNew");
+  const tagTopEl = document.getElementById("tagTop");
+  const tagBottomEl = document.getElementById("tagBottom");
+  const playerNameInput = document.getElementById("playerName");
+
+  const nameModal = document.getElementById("nameModal");
+  const nameModalSub = document.getElementById("nameModalSub");
+  const nameModalInput = document.getElementById("nameModalInput");
+  const nameForm = document.getElementById("nameForm");
+
   const scoreWinsEl = document.getElementById("scoreWins");
   const scoreDrawsEl = document.getElementById("scoreDraws");
   const scoreLossesEl = document.getElementById("scoreLosses");
@@ -45,6 +60,16 @@
   let busy = false; // bot thinking / animating
   let selectedBot = BOTS[2];
   let resultRecorded = false;
+
+  const NAME_KEY = "chessPortal.playerName";
+  let playerName = loadName();
+
+  function loadName() {
+    try { return localStorage.getItem(NAME_KEY) || ""; } catch (e) { return ""; }
+  }
+  function saveName(name) {
+    try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* ignore */ }
+  }
 
   // Persistent dashboard stats.
   const STORAGE_KEY = "chessDashboard.v1";
@@ -85,9 +110,25 @@
       card.addEventListener("click", () => {
         selectedBot = bot;
         renderBotList();
+        // After selecting the bot, ask the player to enter their name.
+        promptName(bot);
       });
       botListEl.appendChild(card);
     }
+  }
+
+  // Show the name-entry modal after a bot is chosen, then start a new game.
+  function promptName(bot) {
+    nameModalSub.textContent = `You picked ${bot.name} (${bot.rating}). Enter your name to begin.`;
+    nameModalInput.value = playerName;
+    nameModal.classList.remove("hidden");
+    setTimeout(() => nameModalInput.focus(), 0);
+  }
+
+  function renderMatchup() {
+    const me = (playerName || "You");
+    tagTopEl.textContent = `${selectedBot.avatar} ${selectedBot.name} (${selectedBot.rating})`;
+    tagBottomEl.textContent = `🧑 ${me} (${stats.rating})`;
   }
 
   function flipped() {
@@ -122,6 +163,15 @@
           sq.classList.add("lastmove");
         }
         if (kingInCheck && kingInCheck.r === r && kingInCheck.c === c) sq.classList.add("check");
+
+        // move guidance: dot for a quiet move, ring for a capture
+        const move = legalForSelected.find((m) => m.to.r === r && m.to.c === c);
+        if (move) {
+          const marker = document.createElement("div");
+          marker.className = move.capture ? "capture" : "dot";
+          sq.appendChild(marker);
+          sq.classList.add("targetable");
+        }
 
         // coordinates on edges
         if (dc === 0) {
@@ -169,28 +219,71 @@
   function updateStatus() {
     let msg = "";
     let result = null; // "win" | "loss" | "draw"
+    let over = null;   // { title, text, icon }
+
+    const me = playerName || "You";
     if (game.isCheckmate(game.turn)) {
       const loserColor = game.turn;
-      const winner = loserColor === "w" ? "Black" : "White";
-      msg = `Checkmate — ${winner} wins!`;
-      result = loserColor === humanColor ? "loss" : "win";
+      const humanLost = loserColor === humanColor;
+      const winnerName = humanLost ? selectedBot.name : me;
+      msg = `Checkmate — ${winnerName} wins!`;
+      result = humanLost ? "loss" : "win";
+      over = {
+        title: "Checkmate",
+        text: humanLost
+          ? `${selectedBot.name} checkmated you.`
+          : `You checkmated ${selectedBot.name}! 🎉`,
+        icon: humanLost ? "😞" : "🏆",
+      };
     } else if (game.isStalemate(game.turn)) {
       msg = "Stalemate — draw.";
       result = "draw";
+      over = { title: "Stalemate", text: "It's a draw.", icon: "🤝" };
     } else if (game.halfmove >= 100) {
       msg = "Draw — 50-move rule.";
       result = "draw";
+      over = { title: "Draw", text: "50-move rule.", icon: "🤝" };
     } else if (game.insufficientMaterial()) {
       msg = "Draw — insufficient material.";
       result = "draw";
+      over = { title: "Draw", text: "Insufficient material.", icon: "🤝" };
     } else if (game.inCheck(game.turn)) {
+      const checkedName = game.turn === humanColor ? me : selectedBot.name;
       msg = "Check!";
+      showBanner(`Check — ${checkedName} is in check!`, "check");
     }
     messageEl.textContent = msg;
+
+    if (!over && !game.inCheck(game.turn)) hideBanner();
+
+    if (over) {
+      hideBanner();
+      showGameOver(over);
+    }
 
     if (result && !resultRecorded) {
       recordResult(result);
     }
+  }
+
+  function showBanner(text, kind) {
+    bannerEl.textContent = text;
+    bannerEl.className = "banner " + (kind || "");
+  }
+
+  function hideBanner() {
+    bannerEl.className = "banner hidden";
+  }
+
+  function showGameOver(over) {
+    goIconEl.textContent = over.icon;
+    goTitleEl.textContent = over.title;
+    goTextEl.textContent = over.text;
+    gameOverEl.classList.remove("hidden");
+  }
+
+  function hideGameOver() {
+    gameOverEl.classList.add("hidden");
   }
 
   function recordResult(result) {
@@ -335,6 +428,9 @@
     sanList = [];
     busy = false;
     resultRecorded = false;
+    hideBanner();
+    hideGameOver();
+    renderMatchup();
     render();
     if (game.turn !== humanColor) scheduleBot();
   }
@@ -359,8 +455,31 @@
 
   newGameBtn.addEventListener("click", newGame);
   undoBtn.addEventListener("click", undo);
+  goNewBtn.addEventListener("click", newGame);
+
+  // Keep the player name in sync from the side panel input.
+  playerNameInput.value = playerName;
+  playerNameInput.addEventListener("input", () => {
+    playerName = playerNameInput.value.trim();
+    saveName(playerName);
+    renderMatchup();
+  });
+
+  // Name modal: confirm name (entered after picking a bot), then start a game.
+  nameForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = nameModalInput.value.trim();
+    if (name) {
+      playerName = name;
+      saveName(playerName);
+      playerNameInput.value = playerName;
+    }
+    nameModal.classList.add("hidden");
+    newGame();
+  });
 
   renderBotList();
   renderDashboard();
+  renderMatchup();
   newGame();
 })();

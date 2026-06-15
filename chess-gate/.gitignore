@@ -1,0 +1,9 @@
+# Cloudflare Wrangler
+.wrangler/
+node_modules/
+
+# Never commit secrets
+.dev.vars
+*.local
+
+.DS_Store
